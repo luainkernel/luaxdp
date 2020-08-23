@@ -289,7 +289,11 @@ static int lxdp_do_redirect(lua_State *L) {
 	uh->check = csum_tcpudp_magic(iph->saddr, iph->daddr, udplen,
 		IPPROTO_UDP, csum_partial((unsigned char *)uh, udplen, 0));
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,3,0)
+	ri->ifindex = ifindex;
+#else
 	ri->tgt_index = ifindex;
+#endif
 	ri->flags = 0;
 	WRITE_ONCE(ri->map, NULL);
 	return 0;
