@@ -309,8 +309,8 @@ static int lxdp_get_ifindex(lua_State *L) {
 static int lxdp_map_update(lua_State *L) {
 	const struct bpf_func_proto *map_udpate_proto;
 	struct bpf_map *map;
-	int key;
-	int elem;
+	lua_Integer key;
+	lua_Integer elem;
 	int ret;
 
 	map = lua_touserdata(L, 1);
@@ -326,14 +326,14 @@ static int lxdp_map_update(lua_State *L) {
 static int lxdp_map_lookup(lua_State *L) {
 	static const struct bpf_func_proto *map_lookup_proto;
 	struct bpf_map *map;
-	int key;
-	int *elem;
+	lua_Integer key;
+	lua_Integer *elem;
 
 	map = lua_touserdata(L, 1);
 	key = lua_tointeger(L, 2);
 
-	elem = (int *) CALLHELPER(map_lookup_proto, map_lookup_elem, map, &key,
-								0, 0, 0);
+	elem = (lua_Integer *) CALLHELPER(map_lookup_proto, map_lookup_elem, map,
+								&key, 0, 0, 0);
 
 	if (!elem)
 		return luaL_error(L, "unable to lookup element");
